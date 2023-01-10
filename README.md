@@ -18,7 +18,7 @@ def admin_only(user):
 # Apply this decorator to the login view
 admin.site.login = user_passes_test(admin_only, login_url='permission_denied')(admin.site.login)
 ```  
-*The **user_passes_test** decorator is used to redirect logged in users away from the admin login page. The **logged_in_test** function checks if the user is logged in, and if so, redirects them to the **home_page** view by returning False.*
+*The **user_passes_test** decorator is used to redirect logged in users away from the admin login page. The **logged_in_test** function checks if the user is logged in, and if so, redirects them to the **permission_denied** view by returning False.*
 
 *__admin.site.login__ is the built-in view for the admin login page. By default, the **admin.site.login** view is accessible to any user, and by wrapping it with __user_passes_test__*
 
