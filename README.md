@@ -55,7 +55,8 @@ def permission_denied(request):
 ## If the user does not log out from the page before closing the browser. If the user is already logged in, then the system will use the existing session and username.
 For example currently loggedin user is : John , he close the browser and visit the site later he should login again.
 One solution to this problem would be to set the session to expire when the browser is closed. This way, the user would need to log in again when they reopen the browser. 
-*settings.py*
+**settings.py**
+
 ``` python
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ```
