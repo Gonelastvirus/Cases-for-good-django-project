@@ -59,6 +59,8 @@ One solution to this problem would be to set the session to expire when the brow
 ``` python
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ```
+Should be written on top above Debug []
+
 **Output**
 
 ![ezgif-2-eb7e72c021](https://user-images.githubusercontent.com/67478827/211652104-d7382785-dc84-481c-b944-16c75e34579f.gif)
