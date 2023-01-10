@@ -47,8 +47,11 @@ def permission_denied(request):
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</html>
 ```
+**Output**
+
+![ezgif-2-c64a113201](https://user-images.githubusercontent.com/67478827/211650514-7fa5c6ed-308a-4efd-9572-70a73c41e578.gif)
+
 ## If the user does not log out from the page before closing the browser. If the user is already logged in, then the system will use the existing session and username.
 For example currently loggedin user is : John , he close the browser and visit the site later he should login again.
 One solution to this problem would be to set the session to expire when the browser is closed. This way, the user would need to log in again when they reopen the browser. 
