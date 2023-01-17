@@ -74,4 +74,112 @@ Should be written on top above Debug []
 
 ![ezgif-2-eb7e72c021](https://user-images.githubusercontent.com/67478827/211652104-d7382785-dc84-481c-b944-16c75e34579f.gif)
 
+## Get Nepal timezone in django. Get timestamp
 
+get into your virtualenv and use pip to install pytz
+```
+pip install pytz
+```
+you need to use django default datetime module.
+```python
+from pytz import timezone
+import datetime
+time_zone = timezone('Asia/Kathmandu')
+timestamp = time_zone.localize(datetime.datetime.now())
+print(timestamp)
+```
+**My personal django channel consumer.py code:**
+```python
+from pytz import timezone
+import datetime
+class DashConsumer(AsyncJsonWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.time_zone = timezone('Asia/Kathmandu')
+    async def connect(self):
+        #.......................
+    async def disconnect(self,code_close):
+        #.....................
+    async def receive():
+        #.................
+        timestamp = self.time_zone.localize(datetime.datetime.now())
+        date = timestamp.date()  # get the date from the timestamp
+        
+```
+# Set Templates in setting.py to access from anywhere
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, "templates"),],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+```
+# Middleware.py for django channel to authenticate token in database and token getting receive from edge device 
+```python
+import urllib.parse
+from django.contrib.auth import get_user_model
+import urllib.parse
+from channels.db import database_sync_to_async
+@database_sync_to_async
+def get_user(token):
+    User = get_user_model()
+    try:
+        return User.objects.get(token=token)
+    except User.DoesNotExist:
+        return None
+
+class CustomUserAuthMiddleware:
+    def __init__(self, inner):
+        self.inner = inner
+
+    async def __call__(self, scope,receive,send):
+        # Get the token from the query string
+        token = urllib.parse.parse_qs(scope["query_string"])[b'token'][0].decode('utf-8')
+        # Get the user using the token
+        user = await get_user(token)
+        if user is None:
+            # If no user was found, return a 401 Unauthorized response
+            return {
+                "close": True,
+                "headers": [
+                    (b"status", b"401 Unauthorized"),
+                ],
+            }
+        # If a user was found, set the user on the scope so that it can be accessed
+        # by the inner application
+        scope["user"] = user
+        return await self.inner(scope,receive,send)
+   ```
+ **You need to add this middleware in asgi.py before authmiddleware stack so that this custom middliware runs first.**
+ ```python
+ import os
+
+from django.core.asgi import get_asgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'iotag.settings')
+
+from channels.routing import ProtocolTypeRouter,URLRouter
+from channels.auth import AuthMiddlewareStack
+from iotag.middlewaretokenauth import CustomUserAuthMiddleware
+from django.urls import path
+from iotapp import consumer
+websocket_urlPattern=[
+    path('show',consumer.DashConsumer.as_asgi()),
+]
+application=ProtocolTypeRouter({
+    # 'http':
+    'websocket':CustomUserAuthMiddleware(AuthMiddlewareStack(URLRouter(websocket_urlPattern)))
+
+})
+ 
+ ```
