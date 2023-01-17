@@ -22,6 +22,14 @@ admin.site.login = user_passes_test(admin_only, login_url='permission_denied')(a
 
 *__admin.site.login__ is the built-in view for the admin login page. By default, the **admin.site.login** view is accessible to any user, and by wrapping it with __user_passes_test__*
 
+**if you want tlogout user visit admin page**
+
+This will return True if user is anonymous or if user is a staff member or superuser.
+It will check for anonymous first and then for staff and superuser.
+```python
+def admin_only(user):
+    return user.is_anonymous or (user.is_staff or user.is_superuser)
+```
 **urls.py**
 ```python
 from django.urls import path
