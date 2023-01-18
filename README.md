@@ -60,7 +60,7 @@ def permission_denied(request):
 
 ![ezgif-2-c64a113201](https://user-images.githubusercontent.com/67478827/211650514-7fa5c6ed-308a-4efd-9572-70a73c41e578.gif)
 
-## If the user does not log out from the page before closing the browser. If the user is already logged in, then the system will use the existing session and username.
+## IF the user does not log out from the page before closing the browser. If the user is already logged in, then the system will use the existing session and username.
 For example currently loggedin user is : John , he close the browser and visit the site later he should login again.
 One solution to this problem would be to set the session to expire when the browser is closed. This way, the user would need to log in again when they reopen the browser. 
 
@@ -190,3 +190,45 @@ application=ProtocolTypeRouter({
 })
  
  ```
+# Extend auth_user table in django.
+
+Sometimes you need some extra field in auth_user table. In such case you can do following:
+
+**models.py**
+
+```python
+from django.contrib.auth.models import AbstractUser
+class CustomUser(AbstractUser):
+    token=models.CharField(max_length=17)
+```
+**settings.py**
+```python
+AUTH_USER_MODEL = 'your_app_name.CustomUser'
+```
+If you are going to create some tables in your project for example table:**SensorData**. As you can use a custom user model that you have defined, rather than being limited to the default Django user model.
+
+**Add this on your models.py so your models.py becomes:** 
+
+```python
+from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+class CustomUser(AbstractUser):
+    token=models.CharField(max_length=17)
+class SensorData(models.Model):
+    user= models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    sensor_value= models.FloatField()
+    timestamp = models.DateTimeField()
+```
+The SensorData model has a foreign key field called user which references a user model. Instead of hardcoding the user model class name in the foreign key field, the **settings.AUTH_USER_MODEL** is used. Now your **SensorData** table contain **user_id** field with specific user id from **CustomUser table**
+
+**CustomUser table:**
+
+![Screenshot from 2023-01-18 21-38-41](https://user-images.githubusercontent.com/67478827/213224007-ee9e9818-5e27-49d1-b61d-8d81860c92ef.png)
+
+**SensorData Table:**
+
+![Screenshot from 2023-01-18 21-41-10](https://user-images.githubusercontent.com/67478827/213223526-f2986f56-059d-480e-b185-3eabf380ddba.png)
+
+
+
