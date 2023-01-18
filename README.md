@@ -68,7 +68,7 @@ One solution to this problem would be to set the session to expire when the brow
 ``` python
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ```
-Should be written on top above Debug []
+Should be written on top above Debug [ ]
 
 **Output**
 
