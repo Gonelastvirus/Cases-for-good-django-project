@@ -88,6 +88,13 @@ time_zone = timezone('Asia/Kathmandu')
 timestamp = time_zone.localize(datetime.datetime.now())
 print(timestamp)
 ```
+**Output**
+```
+2023-01-18 13:52:18.036763+05:45
+```
+* **Note:** if you are working on django & try to store this timezone then it will automatically store in utc format.
+* You can get utc time of kathmandu nepal: https://24timezones.com/difference/utc/kathmandu
+
 **My personal django channel consumer.py code:**
 ```python
 from pytz import timezone
