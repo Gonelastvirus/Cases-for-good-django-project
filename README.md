@@ -231,4 +231,17 @@ The SensorData model has a foreign key field called user which references a user
 ![Screenshot from 2023-01-18 21-41-10](https://user-images.githubusercontent.com/67478827/213223526-f2986f56-059d-480e-b185-3eabf380ddba.png)
 
 
+# Use js file in templates folder with contain html too. Now link that js to html file using urls.py
 
+```python
+from django.contrib import admin
+from django.urls import path
+from iotapp import views
+from django.conf import settings
+from django.conf.urls.static import static
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('',views.index,name='index'),
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+```
+** settings.py **
